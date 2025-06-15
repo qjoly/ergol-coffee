@@ -52,7 +52,6 @@ jobs:
             dist/ergol-coffee.ahk
             dist/ergol-coffee.json
             dist/ergol-coffee.keylayout
-            dist/ergol-coffee.klc
             dist/ergol-coffee.svg
             dist/ergol-coffee.xkb_keymap
             dist/ergol-coffee.xkb_symbols
