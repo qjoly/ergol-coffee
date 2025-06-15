@@ -26,8 +26,16 @@ jobs:
         run: |
           # Get tag version without 'v' prefix
           VERSION=$(echo ${{ github.ref_name }} | sed -e 's/^v//')
+          # Show the extracted version
+          echo "Extracted version: $VERSION"
+          # Show the content of the file before replacement
+          echo "Before replacement:"
+          grep "version" ergol.toml
           # Replace $VERSION placeholder with actual version
           sed -i "s/\$VERSION/$VERSION/g" ergol.toml
+          # Show the content of the file after replacement
+          echo "After replacement:"
+          grep "version" ergol.toml
 
       - name: Generate builds with Kalamine
         run: kalamine build ergol.toml
@@ -39,6 +47,14 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          files: dist/*
+          generate_release_notes: true
+          files: |
+            dist/ergol-coffee.ahk
+            dist/ergol-coffee.json
+            dist/ergol-coffee.keylayout
+            dist/ergol-coffee.klc
+            dist/ergol-coffee.svg
+            dist/ergol-coffee.xkb_keymap
+            dist/ergol-coffee.xkb_symbols
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
