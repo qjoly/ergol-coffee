@@ -1,0 +1,42 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Kalamine
+        run: pip install kalamine
+
+      - name: Set version in ergol.toml
+        run: |
+          # Get tag version without 'v' prefix
+          VERSION=$(echo ${{ github.ref_name }} | sed -e 's/^v//')
+          # Replace $VERSION placeholder with actual version
+          sed -i "s/\$VERSION/$VERSION/g" ergol.toml
+
+      - name: Generate builds with Kalamine
+        run: kalamine build ergol.toml
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,46 @@
+name: Test Build
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*'  # Ignore tags as they're handled by the release workflow
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Kalamine
+        run: pip install kalamine
+
+      - name: Set test version in ergol.toml
+        run: |
+          # Use a test version (using short commit hash)
+          TEST_VERSION=$(echo ${GITHUB_SHA} | cut -c1-7)
+          sed -i "s/\$VERSION/dev-$TEST_VERSION/g" ergol.toml
+          echo "Using test version: dev-$TEST_VERSION"
+
+      - name: Generate builds with Kalamine
+        run: kalamine build ergol.toml
+
+      - name: Verify dist directory
+        run: |
+          echo "Checking build output:"
+          ls -la dist/
+          echo "Build verification complete."
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: keyboard-layouts
+          path: dist/
+          retention-days: 7  # Keep artifacts for 7 days
