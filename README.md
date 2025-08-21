@@ -2,9 +2,11 @@
 
 This is a personal project to modify slightly the style of the [Ergol Layout](https://ergol.org/), a Colemak-style keyboard layout optimized for French, English and coding.
 
+![](ergol-coffee.svg)
+
 ## Why fork the ergol layout?
 
-The Ergol layout is a great layout, I really like it for my everday use. However, I found issues with all tiling shortcuts for sway, emacs, and aerospace ()
+The Ergol layout is a great layout, I really like it for my everday use. However, I found issues with all tiling shortcuts for sway, emacs, and aerospace.
 
 ## How to use it?
 
